@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="scripts/jquery.min.js"></script>
+</head>
+<body>
+    <fieldset>
+        <legend>Uso básico de JQuery</legend>
+        <button id="btnClick"> Hazme click</button>
+        <br/>
+        <p>Contador de visitas: <span style="color:blue;" id="lblcontador">0</span></p>
+    </fieldset>
+    <fieldset>
+        <legend>Consulta de pokemon</legend>
+        <label>Escribe el nombre del pokemon: </label>
+        <input type="text" id="txtPokemon" placeholder="Pikachu" />
+        <button id="btnPokemon">Consultar</button>
+        <br />
+        <p id="lblpokemon"></p>
+    </fieldset>
+    <script>
+        $(document).ready(function(){ // espera que se cargue la página
+           var contador = 0; 
+           $("#btnClick").click(function() {
+               contador += 1;
+               $("#lblcontador").html(contador);
+               //$("#btnClick").hide(); //ocultar el botón
+           });
+           $("#btnPokemon").click(function() {
+                var nombre_pokemon = $("#txtPokemon").val();
+                $.ajax({
+                    beforeSend: function() {
+                        $("#lblpokemon").html("<p style='text-align:center;'>Cargando...</p>");
+                    },
+                    url: "https://pokeapi.co/api/v2/pokemon/" + nombre_pokemon,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        console.log(data);
+                        $("#lblpokemon").html("Nombre: " + data.name + "<br/>" +
+                                              "Altura: " + data.height + "<br/>" +
+                                              "Peso: " + data.weight + "<br />" +
+                                              "<img src='" + data.sprites.front_default + "' alt='Pokemon Image' />");
+                    },
+                    error: function() {
+                        $("#lblpokemon").html("Pokemon no encontrado");
+                    }
+                });
+           });
+        });
+    </script>
+</body>
+</html>
